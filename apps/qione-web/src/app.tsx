@@ -3,6 +3,7 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import RequireAuth from "./components/require_auth";
 import Layout from "./components/layout";
 import AuthPage from "./routes/auth";
+import AuthConfirm from "./routes/auth_confirm";
 import TenantSelect from "./routes/tenant_select";
 import TenantHome from "./routes/tenant_home";
 import Launcher from "./routes/launcher";
@@ -13,6 +14,7 @@ export default function App() {
         <BrowserRouter>
             <Routes>
                 <Route path="/auth" element={<AuthPage />} />
+                <Route path="/auth/confirm" element={<AuthConfirm />} />
 
                 <Route
                     path="/"
