@@ -13,12 +13,9 @@ export default function QiHome() {
 
     return (
         <div className="container" style={{ paddingTop: '20px' }}>
-            <div className="nav-bar" style={{ marginBottom: '20px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                    <div className="module-icon" style={{ width: '40px', height: '40px', fontSize: '18px' }}>🏠</div>
-                    <h2 style={{ marginBottom: 0 }}>QiHome</h2>
-                </div>
-                <button className="secondary" onClick={() => nav(`/t/${tenantId}/launcher`)}>Back to Launcher</button>
+            <div className="nav-bar" style={{ marginBottom: '20px', justifyContent: 'flex-start' }}>
+                <h2 style={{ marginBottom: 0 }}>QiHome</h2>
+                <button className="secondary" style={{ marginLeft: 'auto' }} onClick={() => nav(`/t/${tenantId}/launcher`)}>Back to Launcher</button>
             </div>
 
             <div style={{ display: 'flex', gap: '12px', marginBottom: '32px', padding: '4px', background: 'var(--surface-color)', borderRadius: '16px', width: 'fit-content' }}>

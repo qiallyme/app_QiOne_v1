@@ -42,11 +42,6 @@ export default function TenantSelect() {
 
     return (
         <div className="container" style={{ maxWidth: 800 }}>
-            <div className="nav-bar">
-                <h1 className="gradient-text">QiOne</h1>
-                <button className="secondary" onClick={() => supabase.auth.signOut()}>Sign Out</button>
-            </div>
-
             <div className="glass-card fade-in" style={{ marginBottom: '40px' }}>
                 <h2 style={{ marginBottom: '20px' }}>Create New Tenant</h2>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr auto', gap: '16px', alignItems: 'end' }}>

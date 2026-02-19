@@ -51,12 +51,9 @@ export default function Launcher() {
 
     return (
         <div className="container">
-            <div className="nav-bar">
-                <div>
-                    <h2 style={{ marginBottom: 0 }}>QiOne <span className="gradient-text">Launcher</span></h2>
-                    <p style={{ color: 'var(--text-secondary)', fontSize: '14px' }}>Tenant: {tenantId?.slice(0, 8)}...</p>
-                </div>
-                <div style={{ display: 'flex', gap: '12px' }}>
+            <div className="nav-bar" style={{ justifyContent: 'flex-start', gap: '12px' }}>
+                <p style={{ color: 'var(--text-secondary)', fontSize: '14px', margin: 0 }}>Tenant: {tenantId?.slice(0, 8)}...</p>
+                <div style={{ marginLeft: 'auto', display: 'flex', gap: '12px' }}>
                     <button className="secondary" onClick={() => nav(`/t/${tenantId}/settings`)}>Settings</button>
                     <button className="secondary" onClick={() => nav('/')}>Switch Tenant</button>
                 </div>

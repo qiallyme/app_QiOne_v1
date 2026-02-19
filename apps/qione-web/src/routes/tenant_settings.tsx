@@ -27,12 +27,8 @@ export default function TenantSettings() {
 
     return (
         <div className="container">
-            <div className="nav-bar">
-                <div>
-                    <h2 style={{ marginBottom: 0 }}>Tenant <span className="gradient-text">Settings</span></h2>
-                    <p style={{ color: 'var(--text-secondary)', fontSize: '14px' }}>Configure your workspace, members, and access levels.</p>
-                </div>
-                <button className="secondary" onClick={() => nav(`/t/${tenantId}/launcher`)}>Back to Launcher</button>
+            <div className="nav-bar" style={{ justifyContent: 'flex-start' }}>
+                <button className="secondary" style={{ marginLeft: 'auto' }} onClick={() => nav(`/t/${tenantId}/launcher`)}>Back to Launcher</button>
             </div>
 
             <div style={{ display: 'flex', gap: '12px', marginBottom: '32px', padding: '4px', background: 'var(--surface-color)', borderRadius: '16px', width: 'fit-content' }}>
