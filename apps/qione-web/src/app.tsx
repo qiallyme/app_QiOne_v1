@@ -7,6 +7,7 @@ import AuthConfirm from "./routes/auth_confirm";
 import TenantSelect from "./routes/tenant_select";
 import TenantHome from "./routes/tenant_home";
 import Launcher from "./routes/launcher";
+import TenantSettings from "./routes/tenant_settings";
 import ModuleRouter from "./routes/module_router";
 
 export default function App() {
@@ -44,6 +45,17 @@ export default function App() {
                         <RequireAuth>
                             <Layout>
                                 <Launcher />
+                            </Layout>
+                        </RequireAuth>
+                    }
+                />
+
+                <Route
+                    path="/t/:tenantId/settings"
+                    element={
+                        <RequireAuth>
+                            <Layout>
+                                <TenantSettings />
                             </Layout>
                         </RequireAuth>
                     }

@@ -56,7 +56,10 @@ export default function Launcher() {
                     <h2 style={{ marginBottom: 0 }}>QiOne <span className="gradient-text">Launcher</span></h2>
                     <p style={{ color: 'var(--text-secondary)', fontSize: '14px' }}>Tenant: {tenantId?.slice(0, 8)}...</p>
                 </div>
-                <button className="secondary" onClick={() => nav('/')}>Switch Tenant</button>
+                <div style={{ display: 'flex', gap: '12px' }}>
+                    <button className="secondary" onClick={() => nav(`/t/${tenantId}/settings`)}>Settings</button>
+                    <button className="secondary" onClick={() => nav('/')}>Switch Tenant</button>
+                </div>
             </div>
 
             {err && <div style={{ color: 'var(--error)', padding: '20px', background: 'rgba(255,82,82,0.1)', borderRadius: '12px' }}>{err}</div>}
