@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { supabase } from "../lib/supabase";
 import { useNavigate } from "react-router-dom";
+import { apiPost } from "../lib/api";
 
 type Tenant = { id: string; name: string; type: string };
 
@@ -26,28 +27,12 @@ export default function TenantSelect() {
 
     async function createTenant() {
         setErr(null);
-        const { data: session } = await supabase.auth.getSession();
-        const uid = session.session?.user.id;
-        if (!uid) return setErr("Not signed in.");
-
-        // Create tenant
-        const { data: t, error: e1 } = await supabase
-            .schema('qione')
-            .from("tenants")
-            .insert({ name, type, created_by: uid })
-            .select("id")
-            .single();
-        if (e1) return setErr(e1.message);
-
-        const tenantId = t.id as string;
-
-        // Bootstrap: enable qihome + qione_admin modules, create Owner role, grant admin, assign user
-        // NOTE: these tables are admin-gated by qione_admin access. On a brand-new tenant you don't have that yet.
-        // Best practice: do this bootstrap with SQL (supabase dashboard) or a Cloudflare Worker using service role.
-        // For now, we do the minimal membership insert only (allowed by RLS? no — tenant_members is admin-gated).
-        // So: you MUST bootstrap once with SQL or service role. (I’m not going to lie to you here.)
-
-        nav(`/t/${tenantId}`);
+        try {
+            const out = await apiPost("/api/bootstrap", { name, type });
+            nav(`/t/${out.tenant_id}`);
+        } catch (e: any) {
+            setErr(e.message);
+        }
     }
 
     return (
@@ -79,8 +64,7 @@ export default function TenantSelect() {
             )}
 
             <p style={{ marginTop: 16, opacity: 0.85 }}>
-                ⚠️ Bootstrap note: creating a tenant is not enough. You need a one-time bootstrap (membership + role + module enablement),
-                ideally via a Worker with service-role. See “Bootstrap SQL” below.
+                ⚠️ Bootstrap note: the app now uses a Cloudflare Worker to bootstrap your tenant automatically (membership + role + module enablement).
             </p>
         </div>
     );
