@@ -21,7 +21,17 @@ export default function RequireAuth({ children }: { children: React.ReactNode })
         return () => sub.subscription.unsubscribe();
     }, []);
 
-    if (!ready) return <div style={{ padding: 16 }}>Loading…</div>;
+    if (!ready) {
+        return (
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', background: 'var(--bg-color)' }}>
+                <div style={{ textAlign: 'center' }}>
+                    <div className="module-icon" style={{ margin: '0 auto 20px', width: '60px', height: '60px', borderRadius: '20px' }}>⚡</div>
+                    <p style={{ color: 'var(--text-secondary)', fontWeight: 500 }}>Initializing QiOne...</p>
+                </div>
+            </div>
+        );
+    }
+
     if (!signedIn) return <Navigate to="/auth" replace />;
     return <>{children}</>;
 }

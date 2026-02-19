@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: #0c0d12;
+            color: #ffffff;
+            padding: 40px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #12141e;
+            border: 1px solid #2a2d3e;
+            border-radius: 24px;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #7c4dff, #00e5ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+        }
+
+        .otp-code {
+            font-size: 48px;
+            font-weight: 800;
+            color: #00e5ff;
+            letter-spacing: 8px;
+            margin: 30px 0;
+            background: rgba(0, 229, 255, 0.05);
+            padding: 20px;
+            border-radius: 16px;
+            border: 1px dashed rgba(0, 229, 255, 0.3);
+        }
+
+        .footer {
+            margin-top: 40px;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.5);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="logo">QiOne</div>
+        <h2>Your Verification Code</h2>
+        <p>Enter the following 6-digit code to complete your sign-in.</p>
+        <div class="otp-code">{{ .Token }}</div>
+        <p>This code will expire in 10 minutes.</p>
+        <div class="footer">
+            If you didn't request this code, you can safely ignore this email.<br>
+            &copy; 2026 QiAll Me.
+        </div>
+    </div>
+</body>
+
+</html>

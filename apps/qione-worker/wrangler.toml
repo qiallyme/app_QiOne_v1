@@ -5,7 +5,7 @@ compatibility_date = "2026-02-19"
 [vars]
 SUPABASE_URL = "https://leepylsfyoxuiltawnse.supabase.co"
 SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxlZXB5bHNmeW94dWlsdGF3bnNlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIyNzc2MjEsImV4cCI6MjA3Nzg1MzYyMX0.L9cHIGuT6crnEMQzgAqrFO_9GVujzAuzLtawFQ_AFD0"
-SUPABASE_REDIRECT_TO = "http://localhost:5173" # Update this to your production URL later
+SUPABASE_REDIRECT_TO = "https://one.qially.com" # Update this to your production URL later
 
 # Put this in Cloudflare Secrets (NOT vars):
 # wrangler secret put SUPABASE_SERVICE_ROLE_KEY

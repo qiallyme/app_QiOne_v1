@@ -1,6 +1,7 @@
 import React from "react";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import RequireAuth from "./components/require_auth";
+import Layout from "./components/layout";
 import AuthPage from "./routes/auth";
 import TenantSelect from "./routes/tenant_select";
 import TenantHome from "./routes/tenant_home";
@@ -17,7 +18,9 @@ export default function App() {
                     path="/"
                     element={
                         <RequireAuth>
-                            <TenantSelect />
+                            <Layout>
+                                <TenantSelect />
+                            </Layout>
                         </RequireAuth>
                     }
                 />
@@ -26,7 +29,9 @@ export default function App() {
                     path="/t/:tenantId"
                     element={
                         <RequireAuth>
-                            <TenantHome />
+                            <Layout>
+                                <TenantHome />
+                            </Layout>
                         </RequireAuth>
                     }
                 />
@@ -35,7 +40,9 @@ export default function App() {
                     path="/t/:tenantId/launcher"
                     element={
                         <RequireAuth>
-                            <Launcher />
+                            <Layout>
+                                <Launcher />
+                            </Layout>
                         </RequireAuth>
                     }
                 />
@@ -45,7 +52,9 @@ export default function App() {
                     path="/m/*"
                     element={
                         <RequireAuth>
-                            <ModuleRouter />
+                            <Layout>
+                                <ModuleRouter />
+                            </Layout>
                         </RequireAuth>
                     }
                 />

@@ -9,6 +9,7 @@ export default function Chores() {
     const [items, setItems] = useState<Chore[]>([]);
     const [title, setTitle] = useState("");
     const [err, setErr] = useState<string | null>(null);
+    const [loading, setLoading] = useState(false);
 
     async function load() {
         if (!tenantId) return;
@@ -30,10 +31,9 @@ export default function Chores() {
     }, [tenantId]);
 
     async function addChore() {
-        if (!tenantId) return;
+        if (!tenantId || !title.trim()) return;
+        setLoading(true);
         setErr(null);
-
-        if (!title.trim()) return setErr("Chore title required.");
 
         const { error } = await supabase
             .schema('qione')
@@ -46,6 +46,7 @@ export default function Chores() {
                 is_active: true,
             });
 
+        setLoading(false);
         if (error) return setErr(error.message);
 
         setTitle("");
@@ -54,24 +55,41 @@ export default function Chores() {
 
     return (
         <div>
-            <h3>Chores</h3>
-            {err && <p style={{ color: "crimson" }}>{err}</p>}
+            <h3 style={{ marginBottom: '24px' }}>Household Chores</h3>
 
-            <div style={{ display: "flex", gap: 8, marginBottom: 12 }}>
-                <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="New chore" />
-                <button onClick={addChore}>Add</button>
+            <div className="glass-card" style={{ background: 'rgba(255,255,255,0.02)', padding: '24px', marginBottom: '32px' }}>
+                <h4 style={{ marginBottom: '16px', fontSize: '14px', color: 'var(--text-secondary)', textTransform: 'uppercase' }}>Create New Chore</h4>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: '16px', alignItems: 'end' }}>
+                    <div>
+                        <label style={{ fontSize: '12px', display: 'block', marginBottom: '6px' }}>What needs to be done?</label>
+                        <input
+                            value={title}
+                            onChange={(e) => setTitle(e.target.value)}
+                            placeholder="e.g. Vacuum living room"
+                        />
+                    </div>
+                    <button onClick={addChore} disabled={loading}>{loading ? '...' : 'Add Chore'}</button>
+                </div>
+                {err && <p style={{ color: "var(--error)", fontSize: '14px', marginTop: '12px' }}>{err}</p>}
             </div>
 
             {!items.length ? (
-                <p>No chores yet.</p>
+                <div style={{ textAlign: 'center', padding: '40px', color: 'var(--text-secondary)' }}>
+                    <p>No active chores found. Time to relax, or add one above!</p>
+                </div>
             ) : (
-                <ul>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '16px' }}>
                     {items.map((c) => (
-                        <li key={c.id}>
-                            {c.title} <span style={{ opacity: 0.7 }}>({c.frequency})</span>
-                        </li>
+                        <div key={c.id} className="module-tile" style={{ padding: '20px', cursor: 'default' }}>
+                            <div style={{ fontSize: '24px', marginBottom: '12px' }}>🧹</div>
+                            <h4 style={{ marginBottom: '4px' }}>{c.title}</h4>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '12px' }}>
+                                <span className="status-badge" style={{ fontSize: '10px' }}>{c.frequency}</span>
+                                <span style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>ID: {c.id.slice(0, 4)}</span>
+                            </div>
+                        </div>
                     ))}
-                </ul>
+                </div>
             )}
         </div>
     );

@@ -14,9 +14,10 @@ type Expense = {
 export default function Ledger() {
     const { tenantId } = useParams();
     const [items, setItems] = useState<Expense[]>([]);
-    const [amount, setAmount] = useState<string>("0");
+    const [amount, setAmount] = useState<string>("");
     const [memo, setMemo] = useState<string>("");
     const [err, setErr] = useState<string | null>(null);
+    const [loading, setLoading] = useState(false);
 
     async function load() {
         if (!tenantId) return;
@@ -38,7 +39,8 @@ export default function Ledger() {
     }, [tenantId]);
 
     async function addExpense() {
-        if (!tenantId) return;
+        if (!tenantId || !amount) return;
+        setLoading(true);
         setErr(null);
 
         const { data: session } = await supabase.auth.getSession();
@@ -46,7 +48,10 @@ export default function Ledger() {
         if (!uid) return setErr("Not signed in.");
 
         const amt = Number(amount);
-        if (!Number.isFinite(amt) || amt <= 0) return setErr("Amount must be > 0");
+        if (!Number.isFinite(amt) || amt <= 0) {
+            setLoading(false);
+            return setErr("Amount must be > 0");
+        }
 
         const { error } = await supabase
             .schema('qione')
@@ -60,44 +65,61 @@ export default function Ledger() {
                 created_by: uid,
             });
 
+        setLoading(false);
         if (error) return setErr(error.message);
 
-        setAmount("0");
+        setAmount("");
         setMemo("");
         await load();
     }
 
     return (
         <div>
-            <h3>Ledger</h3>
-            {err && <p style={{ color: "crimson" }}>{err}</p>}
+            <h3 style={{ marginBottom: '24px' }}>Expense Ledger</h3>
 
-            <div style={{ display: "flex", gap: 8, alignItems: "center", marginBottom: 12 }}>
-                <input
-                    value={amount}
-                    onChange={(e) => setAmount(e.target.value)}
-                    placeholder="Amount (e.g. 42.50)"
-                />
-                <input value={memo} onChange={(e) => setMemo(e.target.value)} placeholder="Memo" />
-                <button onClick={addExpense}>Add</button>
+            <div className="glass-card" style={{ background: 'rgba(255,255,255,0.02)', padding: '24px', marginBottom: '32px' }}>
+                <h4 style={{ marginBottom: '16px', fontSize: '14px', color: 'var(--text-secondary)', textTransform: 'uppercase' }}>Add New Expense</h4>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr auto', gap: '16px', alignItems: 'end' }}>
+                    <div>
+                        <label style={{ fontSize: '12px', display: 'block', marginBottom: '6px' }}>Amount</label>
+                        <input
+                            value={amount}
+                            onChange={(e) => setAmount(e.target.value)}
+                            placeholder="0.00"
+                        />
+                    </div>
+                    <div>
+                        <label style={{ fontSize: '12px', display: 'block', marginBottom: '6px' }}>Memo / Description</label>
+                        <input value={memo} onChange={(e) => setMemo(e.target.value)} placeholder="What was this for?" />
+                    </div>
+                    <button onClick={addExpense} disabled={loading}>{loading ? '...' : 'Add'}</button>
+                </div>
+                {err && <p style={{ color: "var(--error)", fontSize: '14px', marginTop: '12px' }}>{err}</p>}
             </div>
 
             {!items.length ? (
-                <p>No expenses yet.</p>
+                <div style={{ textAlign: 'center', padding: '40px', color: 'var(--text-secondary)' }}>
+                    <p>No expenses logged in this tenant.</p>
+                </div>
             ) : (
-                <ul>
+                <div style={{ display: 'grid', gap: '8px' }}>
                     {items.map((e) => (
-                        <li key={e.id}>
-                            {e.date} — {dollars(e.amount_cents)} — {e.memo ?? "(no memo)"}
-                        </li>
+                        <div key={e.id} style={{ display: 'flex', justifyContent: 'space-between', padding: '16px 24px', borderBottom: '1px solid var(--border-color)', alignItems: 'center' }}>
+                            <div>
+                                <div style={{ fontWeight: 600 }}>{e.memo ?? "Untitled Expense"}</div>
+                                <div style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>{e.date} • Paid by {e.paid_by.slice(0, 8)}</div>
+                            </div>
+                            <div style={{ fontSize: '18px', fontWeight: 700, color: 'var(--accent-secondary)' }}>
+                                {dollars(e.amount_cents)}
+                            </div>
+                        </div>
                     ))}
-                </ul>
+                </div>
             )}
 
-            <p style={{ opacity: 0.8 }}>
-                Next step: when adding an expense, also create <code>qihome_expense_shares</code> rows
-                (equal split / custom split). Right now balances will stay empty until shares exist.
-            </p>
+            <div style={{ marginTop: '40px', padding: '16px', borderRadius: '12px', background: 'rgba(124, 77, 255, 0.05)', border: '1px dashed var(--accent-primary)', color: 'var(--text-secondary)', fontSize: '13px' }}>
+                💡 <strong>Tip:</strong> Balances remain zero until <code>qihome_expense_shares</code> are linked. Future updates will automate splitting.
+            </div>
         </div>
     );
 }
