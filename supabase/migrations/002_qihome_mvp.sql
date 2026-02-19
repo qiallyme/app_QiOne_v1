@@ -125,12 +125,14 @@ alter table qione.qihome_chores enable row level security;
 alter table qione.qihome_chore_assignments enable row level security;
 
 -- Categories: read if can read qihome; mutate if write
+drop policy if exists "qihome_categories_read" on qione.qihome_categories;
 create policy "qihome_categories_read"
 on qione.qihome_categories
 for select
 to authenticated
 using (qione.has_module_access(tenant_id, 'qihome', auth.uid(), 'read'));
 
+drop policy if exists "qihome_categories_write" on qione.qihome_categories;
 create policy "qihome_categories_write"
 on qione.qihome_categories
 for all
@@ -139,12 +141,14 @@ using (qione.has_module_access(tenant_id, 'qihome', auth.uid(), 'write'))
 with check (qione.has_module_access(tenant_id, 'qihome', auth.uid(), 'write'));
 
 -- Expenses: read if can read; insert/update/delete if write (creator or admin)
+drop policy if exists "qihome_expenses_read" on qione.qihome_expenses;
 create policy "qihome_expenses_read"
 on qione.qihome_expenses
 for select
 to authenticated
 using (qione.has_module_access(tenant_id, 'qihome', auth.uid(), 'read'));
 
+drop policy if exists "qihome_expenses_write" on qione.qihome_expenses;
 create policy "qihome_expenses_write"
 on qione.qihome_expenses
 for insert
@@ -154,6 +158,7 @@ with check (
   and created_by = auth.uid()
 );
 
+drop policy if exists "qihome_expenses_update_delete" on qione.qihome_expenses;
 create policy "qihome_expenses_update_delete"
 on qione.qihome_expenses
 for update
@@ -166,6 +171,7 @@ with check (
   qione.has_module_access(tenant_id, 'qihome', auth.uid(), 'write')
 );
 
+drop policy if exists "qihome_expenses_delete" on qione.qihome_expenses;
 create policy "qihome_expenses_delete"
 on qione.qihome_expenses
 for delete
@@ -176,6 +182,7 @@ using (
 );
 
 -- Shares: read if can read; write if write
+drop policy if exists "qihome_shares_read" on qione.qihome_expense_shares;
 create policy "qihome_shares_read"
 on qione.qihome_expense_shares
 for select
@@ -189,6 +196,7 @@ using (
   )
 );
 
+drop policy if exists "qihome_shares_write" on qione.qihome_expense_shares;
 create policy "qihome_shares_write"
 on qione.qihome_expense_shares
 for all
@@ -211,12 +219,14 @@ with check (
 );
 
 -- Settlements: read if read; write if write
+drop policy if exists "qihome_settlements_read" on qione.qihome_settlements;
 create policy "qihome_settlements_read"
 on qione.qihome_settlements
 for select
 to authenticated
 using (qione.has_module_access(tenant_id, 'qihome', auth.uid(), 'read'));
 
+drop policy if exists "qihome_settlements_write" on qione.qihome_settlements;
 create policy "qihome_settlements_write"
 on qione.qihome_settlements
 for all
@@ -228,12 +238,14 @@ with check (
 );
 
 -- Chores: read if read; write if write
+drop policy if exists "qihome_chores_read" on qione.qihome_chores;
 create policy "qihome_chores_read"
 on qione.qihome_chores
 for select
 to authenticated
 using (qione.has_module_access(tenant_id, 'qihome', auth.uid(), 'read'));
 
+drop policy if exists "qihome_chores_write" on qione.qihome_chores;
 create policy "qihome_chores_write"
 on qione.qihome_chores
 for all
@@ -242,12 +254,14 @@ using (qione.has_module_access(tenant_id, 'qihome', auth.uid(), 'write'))
 with check (qione.has_module_access(tenant_id, 'qihome', auth.uid(), 'write'));
 
 -- Assignments: read if read; write if write (or self mark done if read)
+drop policy if exists "qihome_assignments_read" on qione.qihome_chore_assignments;
 create policy "qihome_assignments_read"
 on qione.qihome_chore_assignments
 for select
 to authenticated
 using (qione.has_module_access(tenant_id, 'qihome', auth.uid(), 'read'));
 
+drop policy if exists "qihome_assignments_write_admin" on qione.qihome_chore_assignments;
 create policy "qihome_assignments_write_admin"
 on qione.qihome_chore_assignments
 for all
@@ -255,6 +269,7 @@ to authenticated
 using (qione.has_module_access(tenant_id, 'qihome', auth.uid(), 'write'))
 with check (qione.has_module_access(tenant_id, 'qihome', auth.uid(), 'write'));
 
+drop policy if exists "qihome_assignments_self_mark_done" on qione.qihome_chore_assignments;
 create policy "qihome_assignments_self_mark_done"
 on qione.qihome_chore_assignments
 for update

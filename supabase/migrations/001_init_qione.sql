@@ -230,6 +230,7 @@ alter table qione.module_role_access enable row level security;
 alter table qione.member_module_assignments enable row level security;
 
 -- Tenants: a user can see tenants they belong to
+drop policy if exists "tenants_select_if_member" on qione.tenants;
 create policy "tenants_select_if_member"
 on qione.tenants
 for select
@@ -237,6 +238,7 @@ to authenticated
 using (qione.is_tenant_member(id, auth.uid()));
 
 -- Tenants: create allowed (creator becomes owner via app logic)
+drop policy if exists "tenants_insert_self" on qione.tenants;
 create policy "tenants_insert_self"
 on qione.tenants
 for insert
@@ -244,6 +246,7 @@ to authenticated
 with check (created_by = auth.uid());
 
 -- Tenant members: read if member of that tenant
+drop policy if exists "tenant_members_select_if_member" on qione.tenant_members;
 create policy "tenant_members_select_if_member"
 on qione.tenant_members
 for select
@@ -253,6 +256,7 @@ using (qione.is_tenant_member(tenant_id, auth.uid()));
 -- Tenant members: insert/update/delete restricted to admins of any enabled module 'core' (we’ll define core module)
 -- For MVP, treat 'qione_admin' module as admin gate; you can tighten later.
 -- If you don’t like this, move invites into a Worker with service role.
+drop policy if exists "tenant_members_mutate_admin_only" on qione.tenant_members;
 create policy "tenant_members_mutate_admin_only"
 on qione.tenant_members
 for all
@@ -261,6 +265,7 @@ using (qione.has_module_access(tenant_id, 'qione_admin', auth.uid(), 'admin'))
 with check (qione.has_module_access(tenant_id, 'qione_admin', auth.uid(), 'admin'));
 
 -- Modules catalog: readable by all authenticated (or even anon if you want)
+drop policy if exists "modules_select_all" on qione.modules;
 create policy "modules_select_all"
 on qione.modules
 for select
@@ -268,18 +273,21 @@ to authenticated
 using (true);
 
 -- Modules catalog: mutation locked down (do in SQL or service role)
+drop policy if exists "modules_mutation_denied" on qione.modules;
 create policy "modules_mutation_denied"
 on qione.modules
 for insert
 to authenticated
 with check (false);
 
+drop policy if exists "modules_update_denied" on qione.modules;
 create policy "modules_update_denied"
 on qione.modules
 for update
 to authenticated
 using (false);
 
+drop policy if exists "modules_delete_denied" on qione.modules;
 create policy "modules_delete_denied"
 on qione.modules
 for delete
@@ -287,12 +295,14 @@ to authenticated
 using (false);
 
 -- Tenant modules: read if member; write if admin
+drop policy if exists "tenant_modules_select_if_member" on qione.tenant_modules;
 create policy "tenant_modules_select_if_member"
 on qione.tenant_modules
 for select
 to authenticated
 using (qione.is_tenant_member(tenant_id, auth.uid()));
 
+drop policy if exists "tenant_modules_mutate_admin_only" on qione.tenant_modules;
 create policy "tenant_modules_mutate_admin_only"
 on qione.tenant_modules
 for all
@@ -301,12 +311,14 @@ using (qione.has_module_access(tenant_id, 'qione_admin', auth.uid(), 'admin'))
 with check (qione.has_module_access(tenant_id, 'qione_admin', auth.uid(), 'admin'));
 
 -- Roles: read if member; write if admin
+drop policy if exists "roles_select_if_member" on qione.roles;
 create policy "roles_select_if_member"
 on qione.roles
 for select
 to authenticated
 using (qione.is_tenant_member(tenant_id, auth.uid()));
 
+drop policy if exists "roles_mutate_admin_only" on qione.roles;
 create policy "roles_mutate_admin_only"
 on qione.roles
 for all
@@ -315,12 +327,14 @@ using (qione.has_module_access(tenant_id, 'qione_admin', auth.uid(), 'admin'))
 with check (qione.has_module_access(tenant_id, 'qione_admin', auth.uid(), 'admin'));
 
 -- Member roles: read if member; write if admin
+drop policy if exists "member_roles_select_if_member" on qione.member_roles;
 create policy "member_roles_select_if_member"
 on qione.member_roles
 for select
 to authenticated
 using (qione.is_tenant_member(tenant_id, auth.uid()));
 
+drop policy if exists "member_roles_mutate_admin_only" on qione.member_roles;
 create policy "member_roles_mutate_admin_only"
 on qione.member_roles
 for all
@@ -329,12 +343,14 @@ using (qione.has_module_access(tenant_id, 'qione_admin', auth.uid(), 'admin'))
 with check (qione.has_module_access(tenant_id, 'qione_admin', auth.uid(), 'admin'));
 
 -- Module role access: read if member; write if admin
+drop policy if exists "module_role_access_select_if_member" on qione.module_role_access;
 create policy "module_role_access_select_if_member"
 on qione.module_role_access
 for select
 to authenticated
 using (qione.is_tenant_member(tenant_id, auth.uid()));
 
+drop policy if exists "module_role_access_mutate_admin_only" on qione.module_role_access;
 create policy "module_role_access_mutate_admin_only"
 on qione.module_role_access
 for all
@@ -343,12 +359,14 @@ using (qione.has_module_access(tenant_id, 'qione_admin', auth.uid(), 'admin'))
 with check (qione.has_module_access(tenant_id, 'qione_admin', auth.uid(), 'admin'));
 
 -- Member module assignments: read if member; write if admin
+drop policy if exists "member_module_assignments_select_if_member" on qione.member_module_assignments;
 create policy "member_module_assignments_select_if_member"
 on qione.member_module_assignments
 for select
 to authenticated
 using (qione.is_tenant_member(tenant_id, auth.uid()));
 
+drop policy if exists "member_module_assignments_mutate_admin_only" on qione.member_module_assignments;
 create policy "member_module_assignments_mutate_admin_only"
 on qione.member_module_assignments
 for all
