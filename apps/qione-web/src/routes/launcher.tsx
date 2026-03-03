@@ -45,8 +45,13 @@ export default function Launcher() {
     }, [tenantId]);
 
     function open(m: LauncherRow) {
-        if (m.module_key === "qihome") nav(`/m/qihome/${tenantId}/dashboard`);
-        else nav(`/t/${tenantId}/settings`);
+        if (m.module_key === "qihome") {
+            nav(`/m/qihome/${tenantId}/dashboard`);
+        } else if (m.module_key === "qione_admin") {
+            nav(`/t/${tenantId}/admin/modules`);
+        } else {
+            nav(`/t/${tenantId}/settings`);
+        }
     }
 
     return (

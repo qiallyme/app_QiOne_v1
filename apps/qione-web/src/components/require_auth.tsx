@@ -8,8 +8,22 @@ export default function RequireAuth({ children }: { children: React.ReactNode })
 
     useEffect(() => {
         (async () => {
-            const { data } = await supabase.auth.getSession();
-            setSignedIn(!!data.session);
+            const { data: { session } } = await supabase.auth.getSession();
+            if (session) {
+                // Check if the user has an active tenant already
+                const { data: profile } = await supabase
+                    .from("users")
+                    .select("active_tenant_id")
+                    .eq("id", session.user.id)
+                    .single();
+
+                setSignedIn(true);
+
+                // If they are on the root path and have a tenant, jump to it
+                if (window.location.pathname === "/" && profile?.active_tenant_id) {
+                    window.location.href = `/t/${profile.active_tenant_id}/launcher`;
+                }
+            }
             setReady(true);
         })();
 

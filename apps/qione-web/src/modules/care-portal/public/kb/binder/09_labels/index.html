@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Inventory Labels</title>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            padding: 2rem;
+            background: #f8fafc;
+        }
+
+        .label-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+        }
+
+        .label {
+            border: 4px solid black;
+            padding: 2rem;
+            text-align: center;
+            background: white;
+            break-inside: avoid;
+        }
+
+        .label h2 {
+            font-size: 3rem;
+            margin: 0;
+            text-transform: uppercase;
+            font-weight: 900;
+            line-height: 1;
+        }
+
+        .label p {
+            font-size: 1.25rem;
+            margin-top: 1rem;
+            font-weight: 600;
+            color: #475569;
+        }
+
+        .zone-1 {
+            border-color: #2563eb;
+        }
+
+        .zone-1 h2 {
+            color: #2563eb;
+        }
+
+        .zone-2 {
+            border-color: #7c3aed;
+        }
+
+        .zone-2 h2 {
+            color: #7c3aed;
+        }
+
+        .zone-3 {
+            border-color: #dc2626;
+        }
+
+        .zone-3 h2 {
+            color: #dc2626;
+        }
+
+        @media print {
+            body {
+                padding: 0;
+                background: white;
+            }
+
+            .label-grid {
+                display: block;
+            }
+
+            .label {
+                margin-bottom: 2rem;
+                page-break-inside: avoid;
+                border-width: 2px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div style="margin-bottom: 2rem; text-align: center;">
+        <h1>PRINTABLE ZONE LABELS</h1>
+        <p>Print, cut, and tape to corresponding storage areas.</p>
+    </div>
+
+    <div class="label-grid">
+        <!-- Zone 1 -->
+        <div class="label zone-1">
+            <h2>ZONE 1</h2>
+            <p>DAILY CARE<br>(Patient Access)</p>
+        </div>
+
+        <!-- Zone 2 -->
+        <div class="label zone-2">
+            <h2>ZONE 2</h2>
+            <p>MEDICATION CORE<br>(Active & FIFO)</p>
+        </div>
+
+        <!-- Zone 3 -->
+        <div class="label zone-3">
+            <h2>ZONE 3</h2>
+            <p>MEDICAL SUPPLIES<br>(Oxygen & CPAP)</p>
+        </div>
+
+        <!-- Zone 4 -->
+        <div class="label">
+            <h2>ZONE 4</h2>
+            <p>ADMIN / WORK<br>(Paperwork)</p>
+        </div>
+
+        <!-- Zone 5 -->
+        <div class="label">
+            <h2>ZONE 5</h2>
+            <p>CAREGIVER ONLY<br>(Bulk / Overflow)</p>
+        </div>
+    </div>
+</body>
+
+</html>
