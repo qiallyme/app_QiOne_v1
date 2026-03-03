@@ -52,13 +52,10 @@
 <body>
     <div class="container">
         <div class="logo">QiOne</div>
-        <h2>Reset Password</h2>
-        <p>Follow this link to reset the password for your user:</p>
-        <a href="{{ .ConfirmationURL }}" class="btn">Reset Password</a>
-        <div class="footer">
-            If you didn't request a password reset, you can safely ignore this email.<br>
-            &copy; 2026 QiAll Me.
-        </div>
+        <h2>Confirm Change of Email</h2>
+        <p>Follow this link to confirm the update of your email from {{ .Email }} to {{ .NewEmail }}:</p>
+        <a href="{{ .ConfirmationURL }}" class="btn">Change Email</a>
+        <div class="footer">If you didn't request this change, please ignore this email.<br>&copy; 2026 QiAll Me.</div>
     </div>
 </body>
 

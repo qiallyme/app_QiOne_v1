@@ -1,19 +1,63 @@
+# 🧬 QiOne Unified Portal Email Configuration
+# Using premium 'QiOne' design system (Glassmorphism + Outfit Typography)
+
 [auth.email.template.invite]
 subject = "Workspace Invitation: Join QiOne"
 content_path = "./supabase/templates/invite.html"
 
 [auth.email.template.confirmation]
-subject = "Welcome: Confirm Your QiOne Account"
+subject = "Action Required: Confirm Your QiOne Account"
 content_path = "./supabase/templates/confirmation.html"
 
 [auth.email.template.recovery]
-subject = "QiOne Password Reset"
+subject = "Recovery: Reset Your QiOne Password"
 content_path = "./supabase/templates/recovery.html"
 
 [auth.email.template.magic_link]
-subject = "QiOne Magic Sign In Link"
+subject = "Secure Sign-In: Your QiOne Magic Link"
 content_path = "./supabase/templates/magic_link.html"
 
 [auth.email.template.email_change]
-subject = "QiOne Email Change Request"
-content_path = "./supabase/templates/confirmation.html"
+subject = "Security: Confirm Your New Email Address"
+content_path = "./supabase/templates/email_change.html"
+
+[auth.email.template.reauthentication]
+subject = "Security Code: Verify Your Identity"
+content_path = "./supabase/templates/otp.html"
+
+# Security Notifications (Sent when actions are completed)
+
+[auth.email.notification.password_changed]
+enabled = true
+subject = "Security Alert: Your password has been changed"
+content_path = "./supabase/templates/password_changed.html"
+
+[auth.email.notification.email_changed]
+enabled = true
+subject = "Security Alert: Your email has been updated"
+content_path = "./supabase/templates/security_update.html"
+
+[auth.email.notification.phone_changed]
+enabled = true
+subject = "Security Alert: Your phone number has been updated"
+content_path = "./supabase/templates/security_update.html"
+
+[auth.email.notification.mfa_factor_enrolled]
+enabled = true
+subject = "Security Update: New MFA factor added"
+content_path = "./supabase/templates/security_update.html"
+
+[auth.email.notification.mfa_factor_unenrolled]
+enabled = true
+subject = "Security Alert: MFA factor removed"
+content_path = "./supabase/templates/security_update.html"
+
+[auth.email.notification.identity_linked]
+enabled = true
+subject = "Account Update: New identity linked"
+content_path = "./supabase/templates/security_update.html"
+
+[auth.email.notification.identity_unlinked]
+enabled = true
+subject = "Security Alert: Identity unlinked"
+content_path = "./supabase/templates/security_update.html"
