@@ -32,12 +32,34 @@ export default function TenantSelect() {
         setErr(null);
         try {
             const out = await apiPost("/api/bootstrap", { name, type });
+            // After bootstrapping, we should set this as active
+            const { data: session } = await supabase.auth.getSession();
+            const uid = session.session?.user.id;
+            if (uid) {
+                await supabase.from("users").update({ active_tenant_id: out.tenant_id }).eq("id", uid);
+            }
             nav(`/t/${out.tenant_id}/launcher`);
         } catch (e: any) {
             setErr(e.message);
         } finally {
             setLoading(false);
         }
+    }
+
+    async function enterTenant(t: Tenant) {
+        setLoading(true);
+        const { data: session } = await supabase.auth.getSession();
+        const uid = session.session?.user.id;
+
+        if (uid) {
+            // Persist the active tenant in the database for RLS consistency
+            await supabase
+                .from("users")
+                .update({ active_tenant_id: t.id })
+                .eq("id", uid);
+        }
+
+        nav(`/t/${t.id}/launcher`);
     }
 
     return (
@@ -47,7 +69,7 @@ export default function TenantSelect() {
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr auto', gap: '16px', alignItems: 'end' }}>
                     <div>
                         <label style={{ fontSize: '14px', color: 'var(--text-secondary)', display: 'block', marginBottom: '8px' }}>Tenant Name</label>
-                        <input value={name} onChange={(e) => setName(e.target.value)} placeholder="e.g. Acme Corp" />
+                        <input value={name} onChange={(e) => setName(e.target.value)} placeholder="e.g. My Household" />
                     </div>
                     <div>
                         <label style={{ fontSize: '14px', color: 'var(--text-secondary)', display: 'block', marginBottom: '8px' }}>Type</label>
@@ -72,7 +94,7 @@ export default function TenantSelect() {
                     </div>
                 ) : (
                     tenants.map((t) => (
-                        <div key={t.id} className="module-tile" style={{ flexDirection: 'row', alignItems: 'center', padding: '20px 32px' }} onClick={() => nav(`/t/${t.id}/launcher`)}>
+                        <div key={t.id} className="module-tile" style={{ flexDirection: 'row', alignItems: 'center', padding: '20px 32px' }} onClick={() => enterTenant(t)}>
                             <div style={{ fontSize: '24px', marginRight: '20px' }}>🏢</div>
                             <div style={{ flex: 1 }}>
                                 <h3 style={{ marginBottom: '4px' }}>{t.name}</h3>

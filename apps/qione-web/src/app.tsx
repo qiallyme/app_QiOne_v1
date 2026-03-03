@@ -9,6 +9,7 @@ import TenantHome from "./routes/tenant_home";
 import Launcher from "./routes/launcher";
 import TenantSettings from "./routes/tenant_settings";
 import ModuleRouter from "./routes/module_router";
+import AdminModules from "./routes/admin_modules";
 
 export default function App() {
     return (
@@ -56,6 +57,17 @@ export default function App() {
                         <RequireAuth>
                             <Layout>
                                 <TenantSettings />
+                            </Layout>
+                        </RequireAuth>
+                    }
+                />
+
+                <Route
+                    path="/t/:tenantId/admin/modules"
+                    element={
+                        <RequireAuth>
+                            <Layout>
+                                <AdminModules />
                             </Layout>
                         </RequireAuth>
                     }
