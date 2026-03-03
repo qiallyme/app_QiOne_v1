@@ -1,0 +1,19 @@
+[auth.email.template.invite]
+subject = "Workspace Invitation: Join QiOne"
+content_path = "./supabase/templates/invite.html"
+
+[auth.email.template.confirmation]
+subject = "Welcome: Confirm Your QiOne Account"
+content_path = "./supabase/templates/confirmation.html"
+
+[auth.email.template.recovery]
+subject = "QiOne Password Reset"
+content_path = "./supabase/templates/recovery.html"
+
+[auth.email.template.magic_link]
+subject = "QiOne Magic Sign In Link"
+content_path = "./supabase/templates/magic_link.html"
+
+[auth.email.template.email_change]
+subject = "QiOne Email Change Request"
+content_path = "./supabase/templates/confirmation.html"
